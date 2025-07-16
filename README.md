@@ -17,7 +17,7 @@
 
 ## ⚙️ Технологии
 
-- **Python 3.10+**  
+- **Python 3.12+**  
 - **Telegram Bot API** (библиотека `python-telegram-bot`)  
 - **Flask** — микрофреймворк для рендеринга HTML  
 - **Jinja2** — шаблонизация HTML  
