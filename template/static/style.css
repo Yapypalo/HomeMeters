@@ -7,11 +7,13 @@
 
     /* Основные стили */
     body, html {
-      background: #1e1e1e;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      padding: 25px;
-      z-index: -2;
+        background: #1e1e1e;
+        color: #ffffff;
+        font-family: 'Roboto', sans-serif; /* Новый шрифт */
+        font-size: 18px; /* Увеличенный размер текста */
+        padding: 25px;
+        z-index: 2;
+        text-shadow: 0 0 2px rgba(0, 230, 255, 0.3);
     }
 
     /* Контейнер для таблицы */
@@ -20,7 +22,7 @@
       justify-content: center;
       align-items: center;
       margin: 0 auto;
-      max-width: calc(400px + 50px);
+      max-width: calc(400px + 80px);
       padding: 25px 0;
     }
 
@@ -85,22 +87,23 @@
     }
     /* Заголовки таблицы */
     th, td {
-      padding: 12px 15px;
-      text-align: left;
+        padding: 16px 20px; /* Увеличенный отступ */
+        font-size: 20px; /* Увеличенный размер текста */
     }
+
 
     /* Цвет заголовков */
     th {
-      color: #999999;
-      font-weight: normal;
-      text-shadow: 0 0 4px rgba(0, 230, 255, 0.2);
+        color: #999999;
+        font-weight: normal;
+        text-shadow: 0 0 4px rgba(0, 230, 255, 0.2);
     }
 
     /* Акцент для названий услуг */
     td:first-child {
-      font-weight: bold;
-      color: #ffffff;
-      text-shadow: 0 0 2px rgba(0, 230, 255, 0.2);
+        font-weight: bold;
+        color: #ffffff;
+        text-shadow: 0 0 2px rgba(0, 230, 255, 0.2);
     }
 
     /* Итоговая строка */
@@ -124,77 +127,95 @@
 
     /* Сумма в последней ячейке */
     tr.total-row td.total-sum {
-      font-size: 1.1em;
-      color: #ffffff;
-      text-align: right;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 4px;
-      text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
+        font-size: 1.2em; /* Ещё больше для итоговой суммы */
+        color: #ffffff;
+        text-align: center;
+        border-radius: 4px;
+        text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
     }
 
 
-/* Базовый стиль для первой ячейки */
-td.glow-arrow {
-  position: relative;
-  z-index: 1;
-  overflow: visible; /* Чтобы псевдоэлементы не обрезались */
-}
+    /* Базовый стиль для первой ячейки */
+    td.glow-arrow {
+        position: relative;
+        z-index: 1;
+        overflow: visible; /* Чтобы псевдоэлементы не обрезались */
+    }
 
-/* Свечение под текстом (яркий овал) */
-td.glow-arrow::before {
-  content: "";
-  position: absolute;
-  bottom: -55px;
-  left: -150px;
-  width: 200%; /* Под текстом */
-  height: 150px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 215, 0, 0.7) 0%,
-    rgba(255, 215, 0, 0.4) 60%,
-    rgba(255, 215, 0, 0) 100%
-  );
-  filter: blur(2px);
-  transform: scaleY(0.2); /* Сильно сплюснут сверху-снизу */
-  z-index: -1;
-  pointer-events: none;
-}
+    /* Свечение под текстом (яркий овал) */
+    td.glow-arrow::before {
+        content: "";
+        position: absolute;
+        bottom: -48px;
+        left: -150px;
+        width: 180%; /* Под текстом */
+        height: 150px;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(255, 215, 0, 0.7) 0%,
+            rgba(255, 215, 0, 0.4) 60%,
+            rgba(255, 215, 0, 0) 100%
+        );
+        filter: blur(2px);
+        transform: scaleY(0.2); /* Сильно сплюснут сверху-снизу */
+        z-index: -1;
+        pointer-events: none;
+    }
 
 /* Цвета для каждой услуги */
 
-.glow-svet td.glow-arrow::before {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 215, 0, 0.7) 0%,
-    rgba(255, 215, 0, 0.4) 60%,
-    rgba(255, 215, 0, 0) 100%
-  );
-}
+    .glow-svet td.glow-arrow::before {
+        background: radial-gradient(
+            ellipse at center,
+            rgba(255, 215, 0, 0.7) 0%,
+            rgba(255, 215, 0, 0.4) 60%,
+            rgba(255, 215, 0, 0) 100%
+        );
+    }
 
 
-.glow-holodnaja td.glow-arrow::before {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(0, 191, 255, 0.6) 0%,
-    rgba(0, 191, 255, 0.3) 60%,
-    rgba(0, 191, 255, 0) 100%
-  );
-}
+    .glow-holodnaja td.glow-arrow::before {
+        background: radial-gradient(
+            ellipse at center,
+            rgba(0, 191, 255, 0.6) 0%,
+            rgba(0, 191, 255, 0.3) 60%,
+            rgba(0, 191, 255, 0) 100%
+        );
+    }
 
-.glow-goryachaja td.glow-arrow::before {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 69, 0, 0.6) 0%,
-    rgba(255, 69, 0, 0.3) 60%,
-    rgba(255, 69, 0, 0) 100%
-  );
-}
+    .glow-goryachaja td.glow-arrow::before {
+        background: radial-gradient(
+            ellipse at center,
+            rgba(255, 69, 0, 0.6) 0%,
+            rgba(255, 69, 0, 0.3) 60%,
+            rgba(255, 69, 0, 0) 100%
+        );
+    }
 
-.glow-otvod td.glow-arrow::before {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(138, 43, 226, 0.6) 0%,
-    rgba(138, 43, 226, 0.3) 60%,
-    rgba(138, 43, 226, 0) 100%
-  );
-}
+    .glow-otvod td.glow-arrow::before {
+        background: radial-gradient(
+            ellipse at center,
+            rgba(138, 43, 226, 0.6) 0%,
+            rgba(138, 43, 226, 0.3) 60%,
+            rgba(138, 43, 226, 0) 100%
+        );
+    }
+
+    /* Стили для заголовков с дополнительным числом */
+    th {
+        position: relative; /* Для корректного позиционирования sub-number */
+        padding-bottom: 20px; /* Добавляем отступ снизу для числа */
+    }
+
+    /* Стили для маленького числа в заголовке */
+    .sub-number {
+        position: absolute;
+        bottom: 5px; /* Расположение внизу ячейки */
+        left: 50px;
+        font-size: 0.7em; /* Уменьшаем размер шрифта */
+        color: rgb(255, 255, 255); /* Еле заметный цвет */
+        font-weight: normal;
+        text-shadow: none;
+        opacity: 0.8; /* Дополнительное снижение видимости */
+        pointer-events: none; /* Отключаем взаимодействие */
+    }
