@@ -1,29 +1,59 @@
 import asyncio
+from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from playwright.async_api import async_playwright
+import os
+from calculate import calculate_values
 
-async def render_template():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+# Настройка Jinja2
+TEMPLATE_DIR = Path(__file__).parent
+env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
-        # Применение stealth для обхода детекции
-        await page.add_init_script("""
-        delete navigator.__proto__.webdriver;
-        window.chrome = {runtime: {}};
-        """)
+async def generate_image(target_date: str):
+    try:
+        # Вычисление данных
+        data = calculate_values(target_date)
+    except Exception as e:
+        return f"Ошибка: {str(e)}"
 
-        # Открытие HTML-файла
-        html_path = Path('template/template.html').resolve()
-        await page.goto(f'file://{html_path}')
+    try:
+        # Рендеринг HTML
+        template = env.get_template("template/template.html")
+        rendered_html = template.render(**data)
 
-        # Установка размера экрана (700x470)
-        await page.set_viewport_size({"width": 700, "height": 490})
+        # Сохранение временного HTML
+        temp_file = TEMPLATE_DIR / "template/temp_rendered.html"
+        with open(temp_file, "w", encoding="utf-8") as f:
+            f.write(rendered_html)
 
-        # Сделать скриншот
-        await page.screenshot(path="output.png", full_page=False)
+        # Рендеринг через Playwright
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            page = await browser.new_page()
 
-        await browser.close()
+            # Установка stealth
+            await page.add_init_script("""
+            delete navigator.__proto__.webdriver;
+            window.chrome = {runtime: {}};
+            """)
 
-# Запуск
-asyncio.run(render_template())
+            # Открытие HTML
+            html_path = temp_file.resolve()
+            await page.goto(f"file://{html_path}")
+
+            # Установка размера экрана
+            await page.set_viewport_size({"width": 1920, "height": 900})
+            await page.evaluate("() => document.body.style.zoom = 2")  # Масштабирование
+
+            # Сделать скриншот
+            await page.screenshot(path="data/reports/output.png", full_page=False, scale="device")
+
+            await browser.close()
+
+        # Удаление временного файла
+        os.remove(temp_file)
+
+    except Exception as e:
+        return f"Ошибка генерации изображения: {str(e)}"
+
+    return "data/reports/output.png"

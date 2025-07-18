@@ -11,7 +11,7 @@ body, html {
     color: #ffffff;
     font-family: 'Roboto', sans-serif; /* Новый шрифт */
     font-size: 18px; /* Увеличенный размер текста */
-    padding: 25px;
+    padding: 5px;
     z-index: 2;
     text-shadow: 0 0 2px rgba(0, 230, 255, 0.3);
 }
@@ -125,30 +125,45 @@ tr.total-row td.empty {
     visibility: hidden;
 }
 
-/* Сумма в последней ячейке */
-tr.total-row td.total-sum {
-    font-size: 1.2em; /* Ещё больше для итоговой суммы */
-    color: #ffffff;
-    text-align: center;
-    border-radius: 4px;
-    text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
+/* Стиль для ячейки "Итого" */
+td.total-label {
+  text-align: right; /* Выравнивание текста по правому краю */
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 1em;
+  padding-right: 10px; /* Отступ справа */
 }
 
+/* Стиль для итоговой суммы */
+td.total-sum {
+  font-size: 1.2em;
+  color: #ffffff;
+  text-align: center; /* Центрирование суммы */
+  border-radius: 4px;
+  text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
+  position: relative; /* Для свечения */
+}
+
+
+td {
+    white-space: nowrap;
+}
 
 /* Базовый стиль для первой ячейки */
 td.glow-arrow {
     position: relative;
     z-index: 1;
     overflow: visible; /* Чтобы псевдоэлементы не обрезались */
+
 }
 
 /* Свечение под текстом (яркий овал) */
 td.glow-arrow::before {
     content: "";
     position: absolute;
-    bottom: -48px;
+    bottom: -90%;
     left: -150px;
-    width: 180%; /* Под текстом */
+    width: 170%; /* Под текстом */
     height: 150px;
     background: radial-gradient(
         ellipse at center,
@@ -201,18 +216,41 @@ td.glow-arrow::before {
     );
 }
 
+td.total-sum::after {
+    content: "";
+    position: absolute;
+    bottom: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; /* Под ширину ячейки */
+    height: 30px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 255, 0, 0.5) 0%,
+        rgba(0, 255, 0, 0.3) 60%,
+        rgba(0, 255, 0, 0) 100%
+    );
+    filter: blur(2px);
+    z-index: -1;
+}
+
 /* Стили для заголовков с дополнительным числом */
 th {
     position: relative; /* Для корректного позиционирования sub-number */
     padding-bottom: 20px; /* Добавляем отступ снизу для числа */
 }
 
+tr:not(:first-of-type) td:not(:first-child) {
+  text-align: center;
+}
+
 /* Стили для маленького числа в заголовке */
 .sub-number {
     position: absolute;
     bottom: 5px; /* Расположение внизу ячейки */
-    left: 50px;
-    font-size: 0.7em; /* Уменьшаем размер шрифта */
+    left: 50%;
+    transform: translateX(-50%); /* Центрирование */
+    font-size: 0.75em; /* Уменьшаем размер шрифта */
     color: rgb(255, 255, 255); /* Еле заметный цвет */
     font-weight: normal;
     text-shadow: none;
@@ -220,15 +258,76 @@ th {
     pointer-events: none; /* Отключаем взаимодействие */
 }
 
-@media print {
-    @page {
-        size: 700px 470px;
-        margin: 0;
-    }
+.masked-box {
+    width: 200px;
+    height: 80px;
+    margin: 0 auto;
+    position: relative;
     
-    body {
-        width: 700px;
-        height: 470px;
-        padding: 5px;
-    }
+    /* Основной фон */
+    background-color: #1e1e1e;
+    
+    /* Комбинированные градиенты */
+    background-image:
+        /* Верхнее свечение (1-2px яркий край + 10% свечения) */
+        linear-gradient(to bottom, 
+            rgba(255, 255, 255, 0.8) 2px,
+            rgba(0, 230, 255, 0.35) 70%,
+            transparent 100%
+        ),
+        
+        /* Левое свечение (более яркое, 15% свечения) */
+        linear-gradient(to right,
+            rgba(228, 243, 245, 0.4) 13px,
+            rgba(0, 230, 255, 0.35) 25%,
+            transparent 100%
+        ),
+        
+        /* Правая тень (радиальный градиент) */
+        radial-gradient(circle at 100% 50%,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.2) 80%,
+            transparent 70%
+        ),
+        
+        /* Нижняя тень */
+        linear-gradient(to right,
+            rgba(0, 0, 0, 0.6) 10%,
+            rgba(0, 0, 0, 0.85) 100%,
+            transparent 70%
+        );
+    
+    /* Позиционирование и размеры градиентов */
+    background-position: 
+        top right, 
+        top left,
+        bottom right,
+        bottom left;
+    
+    background-size: 
+        100% 20%,   /* Верхнее свечение (высота 15%) */
+        15% 100%,   /* Левое свечение (ширина 15%) */
+        30% 60%,    /* Правая тень */
+        100% 15%;    /* Нижняя тень */
+    
+    background-repeat: no-repeat;
+    
+    /* Маска */
+    mask: url(#text-mask);
+    -webkit-mask: url(#text-mask);
+    filter: blur(8px);
+    z-index: 10;
+}
+
+/* Псевдоэлемент для размытого верхнего свечения */
+.masked-box {
+    background: #1e1e1e;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.8px);
+    -webkit-backdrop-filter: blur(6.8px);
+    border: 3px solid rgba(0, 230, 255, 1);
+    border-top-width: 4px;
+    border-left-width: 8px;
+    border-right-width: 0;
+    border-bottom-width: 0;
 }

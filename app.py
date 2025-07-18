@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 from datetime import date
+from report_generate import generate_image
 
 load_dotenv()
 os.makedirs("data", exist_ok=True)
+os.makedirs("data/reports", exist_ok=True)
 meter_label = {'cold': "Холодная вода🧊", 'hot': "Горячая вода🔥", 'light': "Свет💡"}
 
 
@@ -67,7 +69,7 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 1) Запись в data.json
     m_type = user_input[0][1:]
     m_value = user_input[1]
-    write_data_to_json_file({m_type: m_value})
+    write_data_to_json_file({m_type: int(m_value)})
     
     # 2) Инициализация сообщения-отчёта, если первый ввод за день
     if cd.get('report_date') != today:
@@ -128,6 +130,22 @@ async def photo_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 6) Ответ пользователю
     await context.bot.send_message(chat_id, f"✅ Фото сохранено: `{filename}`")
 
+async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Получаем сегодняшнюю дату
+    today = date.today().isoformat()
+
+    # Генерация изображения
+    result = await generate_image(today)
+
+    if result.endswith(".png"):
+        # Отправка PNG
+        with open(result, "rb") as f:
+            await context.bot.send_photo(chat_id=update.effective_chat.id, photo=f)
+    else:
+        # Отправка ошибки
+        await update.message.reply_text(result)
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
@@ -136,10 +154,12 @@ if __name__ == '__main__':
     
     start_handler = CommandHandler('start', start)
     commans_handler = CommandHandler(['cold', 'hot', 'light'], handle_reading)
+    generator = CommandHandler('generate', generate)
     photo_handler = MessageHandler(filters.PHOTO, photo_save)
     
     application.add_handler(start_handler)
     application.add_handler(commans_handler)
     application.add_handler(photo_handler)
+    application.add_handler(generator)
     
     application.run_polling()

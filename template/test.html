@@ -21,7 +21,7 @@
                   <text x="10" y="70"
                      font-size="80" font-weight="bold"
                      fill="white">
-                    {{ year }}
+                    2025
                   </text>
                 </mask>
               </defs>
@@ -30,27 +30,52 @@
           <div class="masked-box"></div>
 
         </th>
-        <th>Предыдущие показания
-            <span class="sub-number">{{ month_old }}</span>
-        </th>
-        <th>Текущие показания
-            <span class="sub-number">{{ month_now }}</span>
-        </th>
+        <th>Дата начала</th>
+        <th>Дата конца</th>
         <th>Расход </th>
         <th>Цена</th>
         <th>Сумма</th>
       </tr>
 
-      {% for service in services %}
-      <tr class="glow {{ service.class }}">
-        <td class="glow-arrow">{{ service.name }}</td>
-        <td>{{ service.start }}</td>
-        <td>{{ service.end }}</td>
-        <td>{{ service.diff }}</td>
-        <td>{{ service.price }}</td>
-        <td>{{ service.total }}</td>
+      <!-- Свет -->
+      <tr class="glow glow-svet">
+        <td class="glow-arrow">Свет</td>
+        <td>01.07.2025</td>
+        <td>31.07.2025</td>
+        <th>Расход </th>
+        <td>200 ₽</td>
+        <td>200 ₽</td>
       </tr>
-      {% endfor %}
+
+      <!-- Холодная вода -->
+      <tr class="glow glow-holodnaja">
+        <td class="glow-arrow">Холодная вода</td>
+        <td>01.07.2025</td>
+        <td>31.07.2025</td>
+        <th>Расход </th>
+        <td>50 ₽</td>
+        <td>50 ₽</td>
+      </tr>
+
+      <!-- Горячая вода -->
+      <tr class="glow glow-goryachaja">
+        <td class="glow-arrow">Горячая вода</td>
+        <td>01.07.2025</td>
+        <td>31.07.2025</td>
+        <th>Расход </th>
+        <td>150 ₽</td>
+        <td>150 ₽</td>
+      </tr>
+
+      <!-- Водоотведение -->
+      <tr class="glow glow-otvod">
+        <td class="glow-arrow">Водоотведение</td>
+        <td>01.07.2025</td>
+        <td>31.07.2025</td>
+        <th>Расход </th>
+        <td>100 ₽</td>
+        <td>100 ₽</td>
+      </tr>
 
       <!-- Итоговая сумма -->
       <tr class="total-row">
@@ -58,8 +83,8 @@
         <td class="empty">—</td>
         <td class="empty">—</td>
         <td class="empty">—</td>
-        <td>Итого:</td>
-        <td class="total-sum">{{ total }}</td>
+        <td>Итого</td>
+        <td class="total-sum">500 ₽</td>
       </tr>
     </table>
   </div>
