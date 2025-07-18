@@ -1,221 +1,234 @@
 /* Сброс стилей */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    /* Основные стили */
-    body, html {
-        background: #1e1e1e;
-        color: #ffffff;
-        font-family: 'Roboto', sans-serif; /* Новый шрифт */
-        font-size: 18px; /* Увеличенный размер текста */
-        padding: 25px;
-        z-index: 2;
-        text-shadow: 0 0 2px rgba(0, 230, 255, 0.3);
-    }
+/* Основные стили */
+body, html {
+    background: #1e1e1e;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif; /* Новый шрифт */
+    font-size: 18px; /* Увеличенный размер текста */
+    padding: 25px;
+    z-index: 2;
+    text-shadow: 0 0 2px rgba(0, 230, 255, 0.3);
+}
 
-    /* Контейнер для таблицы */
-    .wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto;
-      max-width: calc(400px + 80px);
-      padding: 25px 0;
-    }
+/* Контейнер для таблицы */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    max-width: calc(400px + 80px);
+    padding: 25px 0;
+}
 
 
-    /* Стили таблицы с неоновым свечением */
-    table {
-      border-collapse: collapse;
-      width: 400px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 
-        0 0 15px rgba(0, 230, 255, 0.2),
-        0 10px 25px rgba(0, 230, 255, 0.3),
-        -10px 0 20px rgba(0, 230, 255, 0.3);
-      overflow: hidden; /* Скрывает выступающие части */
-      z-index: 3;
-    }
+/* Стили таблицы с неоновым свечением */
+table {
+    border-collapse: collapse;
+    width: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 
+    0 0 15px rgba(0, 230, 255, 0.2),
+    0 10px 25px rgba(0, 230, 255, 0.3),
+    -10px 0 20px rgba(0, 230, 255, 0.3);
+    overflow: hidden; /* Скрывает выступающие части */
+    z-index: 3;
+}
 
-    /* Градиентные разделители между строками */
-    tr {
-      position: relative;
-    }
+/* Градиентные разделители между строками */
+tr {
+    position: relative;
+}
 
-    tr::after {
-      content: "";
-      position: absolute;
-      left: -100%;
-      right: -100%;
-      bottom: 0;
-      height: 1px;
-      background: linear-gradient(
+tr::after {
+    content: "";
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+    to right,
+    transparent 25%,
+    rgba(0, 230, 255, 0.7),
+    transparent 75%
+    );
+    z-index: -1;
+}
+
+tr:not(:last-child) {
+    position: relative;
+}
+
+/* Горизонтальные линии с градиентным затуханием */
+tr:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; /* Ширина линии */
+    height: 2px;
+    background: linear-gradient(
         to right,
-        transparent 25%,
-        rgba(0, 230, 255, 0.7),
-        transparent 75%
-      );
-      z-index: -1;
-    }
-
-    tr:not(:last-child) {
-        position: relative;
-    }
-
-    /* Горизонтальные линии с градиентным затуханием */
-    tr:not(:last-child)::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%; /* Ширина линии */
-        height: 2px;
-        background: linear-gradient(
-            to right,
-            transparent 5%,
-            rgba(200, 230, 255, 0.6) 50%,
-            transparent 95%
-        );
-        opacity: 1;
-        z-index: 1;
-    }
-    /* Заголовки таблицы */
-    th, td {
-        padding: 16px 20px; /* Увеличенный отступ */
-        font-size: 20px; /* Увеличенный размер текста */
-    }
+        transparent 5%,
+        rgba(200, 230, 255, 0.6) 50%,
+        transparent 95%
+    );
+    opacity: 1;
+    z-index: 1;
+}
+/* Заголовки таблицы */
+th, td {
+    padding: 16px 20px; /* Увеличенный отступ */
+    font-size: 20px; /* Увеличенный размер текста */
+}
 
 
-    /* Цвет заголовков */
-    th {
-        color: #999999;
-        font-weight: normal;
-        text-shadow: 0 0 4px rgba(0, 230, 255, 0.2);
-    }
+/* Цвет заголовков */
+th {
+    color: #999999;
+    font-weight: normal;
+    text-shadow: 0 0 4px rgba(0, 230, 255, 0.2);
+}
 
-    /* Акцент для названий услуг */
-    td:first-child {
-        font-weight: bold;
-        color: #ffffff;
-        text-shadow: 0 0 2px rgba(0, 230, 255, 0.2);
-    }
+/* Акцент для названий услуг */
+td:first-child {
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 2px rgba(0, 230, 255, 0.2);
+}
 
-    /* Итоговая строка */
-    tr.total-row {
-      background: transparent;
-    }
+/* Итоговая строка */
+tr.total-row {
+    background: transparent;
+}
 
-    tr.total-row td {
-      font-weight: bold;
-      padding-top: 14px;
-      padding-bottom: 14px;
-    }
+tr.total-row td {
+    font-weight: bold;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
 
-    /* Прозрачные ячейки */
-    tr.total-row td.empty {
-      background: transparent;
-      border: none;
-      padding: 0;
-      visibility: hidden;
-    }
+/* Прозрачные ячейки */
+tr.total-row td.empty {
+    background: transparent;
+    border: none;
+    padding: 0;
+    visibility: hidden;
+}
 
-    /* Сумма в последней ячейке */
-    tr.total-row td.total-sum {
-        font-size: 1.2em; /* Ещё больше для итоговой суммы */
-        color: #ffffff;
-        text-align: center;
-        border-radius: 4px;
-        text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
-    }
+/* Сумма в последней ячейке */
+tr.total-row td.total-sum {
+    font-size: 1.2em; /* Ещё больше для итоговой суммы */
+    color: #ffffff;
+    text-align: center;
+    border-radius: 4px;
+    text-shadow: 0 0 4px rgba(0, 230, 255, 0.3);
+}
 
 
-    /* Базовый стиль для первой ячейки */
-    td.glow-arrow {
-        position: relative;
-        z-index: 1;
-        overflow: visible; /* Чтобы псевдоэлементы не обрезались */
-    }
+/* Базовый стиль для первой ячейки */
+td.glow-arrow {
+    position: relative;
+    z-index: 1;
+    overflow: visible; /* Чтобы псевдоэлементы не обрезались */
+}
 
-    /* Свечение под текстом (яркий овал) */
-    td.glow-arrow::before {
-        content: "";
-        position: absolute;
-        bottom: -48px;
-        left: -150px;
-        width: 180%; /* Под текстом */
-        height: 150px;
-        background: radial-gradient(
-            ellipse at center,
-            rgba(255, 215, 0, 0.7) 0%,
-            rgba(255, 215, 0, 0.4) 60%,
-            rgba(255, 215, 0, 0) 100%
-        );
-        filter: blur(2px);
-        transform: scaleY(0.2); /* Сильно сплюснут сверху-снизу */
-        z-index: -1;
-        pointer-events: none;
-    }
+/* Свечение под текстом (яркий овал) */
+td.glow-arrow::before {
+    content: "";
+    position: absolute;
+    bottom: -48px;
+    left: -150px;
+    width: 180%; /* Под текстом */
+    height: 150px;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 215, 0, 0.7) 0%,
+        rgba(255, 215, 0, 0.4) 60%,
+        rgba(255, 215, 0, 0) 100%
+    );
+    filter: blur(2px);
+    transform: scaleY(0.2); /* Сильно сплюснут сверху-снизу */
+    z-index: -1;
+    pointer-events: none;
+}
 
 /* Цвета для каждой услуги */
 
-    .glow-svet td.glow-arrow::before {
-        background: radial-gradient(
-            ellipse at center,
-            rgba(255, 215, 0, 0.7) 0%,
-            rgba(255, 215, 0, 0.4) 60%,
-            rgba(255, 215, 0, 0) 100%
-        );
-    }
+.glow-svet td.glow-arrow::before {
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 215, 0, 0.7) 0%,
+        rgba(255, 215, 0, 0.4) 60%,
+        rgba(255, 215, 0, 0) 100%
+    );
+}
 
 
-    .glow-holodnaja td.glow-arrow::before {
-        background: radial-gradient(
-            ellipse at center,
-            rgba(0, 191, 255, 0.6) 0%,
-            rgba(0, 191, 255, 0.3) 60%,
-            rgba(0, 191, 255, 0) 100%
-        );
-    }
+.glow-holodnaja td.glow-arrow::before {
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 191, 255, 0.6) 0%,
+        rgba(0, 191, 255, 0.3) 60%,
+        rgba(0, 191, 255, 0) 100%
+    );
+}
 
-    .glow-goryachaja td.glow-arrow::before {
-        background: radial-gradient(
-            ellipse at center,
-            rgba(255, 69, 0, 0.6) 0%,
-            rgba(255, 69, 0, 0.3) 60%,
-            rgba(255, 69, 0, 0) 100%
-        );
-    }
+.glow-goryachaja td.glow-arrow::before {
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 69, 0, 0.6) 0%,
+        rgba(255, 69, 0, 0.3) 60%,
+        rgba(255, 69, 0, 0) 100%
+    );
+}
 
-    .glow-otvod td.glow-arrow::before {
-        background: radial-gradient(
-            ellipse at center,
-            rgba(138, 43, 226, 0.6) 0%,
-            rgba(138, 43, 226, 0.3) 60%,
-            rgba(138, 43, 226, 0) 100%
-        );
-    }
+.glow-otvod td.glow-arrow::before {
+    background: radial-gradient(
+        ellipse at center,
+        rgba(138, 43, 226, 0.6) 0%,
+        rgba(138, 43, 226, 0.3) 60%,
+        rgba(138, 43, 226, 0) 100%
+    );
+}
 
-    /* Стили для заголовков с дополнительным числом */
-    th {
-        position: relative; /* Для корректного позиционирования sub-number */
-        padding-bottom: 20px; /* Добавляем отступ снизу для числа */
-    }
+/* Стили для заголовков с дополнительным числом */
+th {
+    position: relative; /* Для корректного позиционирования sub-number */
+    padding-bottom: 20px; /* Добавляем отступ снизу для числа */
+}
 
-    /* Стили для маленького числа в заголовке */
-    .sub-number {
-        position: absolute;
-        bottom: 5px; /* Расположение внизу ячейки */
-        left: 50px;
-        font-size: 0.7em; /* Уменьшаем размер шрифта */
-        color: rgb(255, 255, 255); /* Еле заметный цвет */
-        font-weight: normal;
-        text-shadow: none;
-        opacity: 0.8; /* Дополнительное снижение видимости */
-        pointer-events: none; /* Отключаем взаимодействие */
+/* Стили для маленького числа в заголовке */
+.sub-number {
+    position: absolute;
+    bottom: 5px; /* Расположение внизу ячейки */
+    left: 50px;
+    font-size: 0.7em; /* Уменьшаем размер шрифта */
+    color: rgb(255, 255, 255); /* Еле заметный цвет */
+    font-weight: normal;
+    text-shadow: none;
+    opacity: 0.8; /* Дополнительное снижение видимости */
+    pointer-events: none; /* Отключаем взаимодействие */
+}
+
+@media print {
+    @page {
+        size: 700px 470px;
+        margin: 0;
     }
+    
+    body {
+        width: 700px;
+        height: 470px;
+        padding: 5px;
+    }
+}
