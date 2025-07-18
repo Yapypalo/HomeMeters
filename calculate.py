@@ -66,8 +66,8 @@ def calculate_values(target_date: str) -> dict:
             "name": name,
             "start": start,
             "end": end,
-            "diff": diff,
-            "price": f"{price} ₽",
+            "diff": f"{diff} м<sup>3</sup>",
+            "price": f"{price} руб/м<sup>3</sup>",
             "total": f"{total_service} ₽",
             "class": css_class
         })
@@ -84,8 +84,8 @@ def calculate_values(target_date: str) -> dict:
         "name": "Водоотведение",
         "start": "-",  # Не отображается в таблице
         "end": "-",    # Не отображается в таблице
-        "diff": otvod_diff,
-        "price": f"{otvod_price} ₽",
+        "diff": f"{otvod_diff} кВт",
+        "price": f"{otvod_price} руб/кВт",
         "total": f"{otvod_total} ₽",
         "class": "glow-otvod"
     })

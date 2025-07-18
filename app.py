@@ -70,6 +70,10 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE):
     m_type = user_input[0][1:]
     m_value = user_input[1]
     write_data_to_json_file({m_type: int(m_value)})
+    if 'user_write_counter' in cd.keys():
+        cd['user_write_counter'] += 1
+    else:
+        cd['user_write_counter'] = 1
     
     # 2) Инициализация сообщения-отчёта, если первый ввод за день
     if cd.get('report_date') != today:
@@ -80,6 +84,7 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = await context.bot.send_message(chat_id, initial)
         cd['report_date'] = today
         cd['report_msg_id'] = msg.message_id
+        
 
     # 3) Считываем текущее состояние из data.json   
     day_data = load_data_for_date(today)
@@ -99,6 +104,10 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id=chat_id,
         message_id=cd['report_msg_id']
     )
+
+    if cd['user_write_counter'] == 3:
+        await generate(update, context)
+        cd['user_write_counter'] = 0
 
 async def photo_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
@@ -143,7 +152,7 @@ async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_photo(chat_id=update.effective_chat.id, photo=f)
     else:
         # Отправка ошибки
-        await update.message.reply_text(result)
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=result)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):

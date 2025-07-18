@@ -161,7 +161,7 @@ td.glow-arrow {
 td.glow-arrow::before {
     content: "";
     position: absolute;
-    bottom: -90%;
+    bottom: -80%;
     left: -150px;
     width: 170%; /* Под текстом */
     height: 150px;
