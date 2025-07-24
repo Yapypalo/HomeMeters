@@ -19,11 +19,10 @@
 
 - **Python 3.12+**  
 - **Telegram Bot API** (библиотека `python-telegram-bot`)  
-- **Flask** — микрофреймворк для рендеринга HTML  
 - **Jinja2** — шаблонизация HTML  
 - **HTML / CSS** — шаблон отчёта  
-- **WeasyPrint** — конвертация HTML в PNG/PDF  
-- **Docker** (`python:3.10-slim`)  
+- **Playwright+Chromium** — конвертация HTML в PNG/PDF  
+- **Docker** (`python:3.12-slim`)  
 - **JSON** — хранение показаний  
 
 ---
