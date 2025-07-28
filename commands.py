@@ -3,7 +3,7 @@ from telegram.ext import (
     ContextTypes, ConversationHandler, CommandHandler,
     CallbackQueryHandler, MessageHandler, filters
 )
-from data_handler import write_reading, load_user_data, get_day_data, update_price, list_dates
+from data_handler import write_reading, load_user_data, get_day_data, update_price, list_dates, ensure_user_folder
 from datetime import date, datetime, timedelta
 import asyncio
 import re
@@ -39,6 +39,114 @@ VIEW_DETAILS = 5
 EDIT_READING = 6
 EDIT_DATE = 7
 VIEW_REPORT = 8
+
+async def delete_message_after_delay(chat_id: int, message_id: int, delay: int = 3, bot=None):
+    """Удаляет сообщение через заданное количество секунд"""
+    await asyncio.sleep(delay)
+    try:
+        await bot.delete_message(chat_id=chat_id, message_id=message_id)
+    except Exception as e:
+        logger.debug(f"Не удалось удалить сообщение: {e}")
+
+async def handle_photos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработка фотографий от пользователя (не более 3-х в день)"""
+    user_id = update.effective_user.id
+    
+    # Создаем папку пользователя, если не существует
+    user_folder = ensure_user_folder(user_id)
+    photos_folder = os.path.join(user_folder, 'photos')
+    os.makedirs(photos_folder, exist_ok=True)
+    
+    # Создаем папку за текущую дату
+    today = date.today().isoformat()
+    today_folder = os.path.join(photos_folder, today)
+    os.makedirs(today_folder, exist_ok=True)
+    
+    # Проверяем количество фото за сегодня
+    existing_photos = [
+        f for f in os.listdir(today_folder) 
+        if f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif'))
+    ]
+    
+    if len(existing_photos) >= 3:
+        msg = await update.message.reply_text(
+            "📸 Вы достигли лимита в 3 фотографии за день.",
+            reply_to_message_id=update.message.message_id
+        )
+        
+        # Удаляем сообщение пользователя через 1 секунду
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            update.message.message_id, 
+            1, 
+            context.bot
+        ))
+        
+        # Удаляем сообщение бота через 3 секунды
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            msg.message_id, 
+            3, 
+            context.bot
+        ))
+        return
+    
+    # Получаем самое большое фото
+    photo = update.message.photo[-1]
+    file = await context.bot.get_file(photo.file_id)
+    
+    # Генерируем уникальное имя файла
+    timestamp = int(datetime.now().timestamp())
+    file_name = f"{timestamp}.jpg"
+    file_path = os.path.join(today_folder, file_name)
+    
+    try:
+        # Скачиваем и сохраняем фото
+        await file.download_to_drive(file_path)
+        
+        # Отправляем подтверждение
+        msg = await update.message.reply_text(
+            f"📸 Фотография сохранена ({len(existing_photos)+1}/3)",
+            reply_to_message_id=update.message.message_id
+        )
+        
+        # Удаляем сообщение пользователя через 1.5 секунды
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            update.message.message_id, 
+            2, 
+            context.bot
+        ))
+        
+        # Удаляем сообщение бота через 3 секунды
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            msg.message_id, 
+            3, 
+            context.bot
+        ))
+    except Exception as e:
+        logger.error(f"Ошибка при сохранении фото: {e}")
+        msg = await update.message.reply_text(
+            "Произошла ошибка при сохранении фотографии.",
+            reply_to_message_id=update.message.message_id
+        )
+        
+        # Удаляем сообщение пользователя через 1.5 секунды
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            update.message.message_id, 
+            1.5, 
+            context.bot
+        ))
+        
+        # Удаляем сообщение бота через 3 секунды
+        asyncio.create_task(delete_message_after_delay(
+            update.effective_chat.id, 
+            msg.message_id, 
+            3, 
+            context.bot
+        ))
 
 def get_system_status(user_id: int) -> str:
     """Проверяет системное состояние и возвращает соответствующее сообщение"""
@@ -468,8 +576,10 @@ async def refresh_price_menu(update: Update, context: ContextTypes.DEFAULT_TYPE)
     
     if not chat_id or not message_id:
         # Если контекст утерян, возвращаемся в главное меню
-        await update.message.reply_text(
-            get_welcome_message(update.effective_user.id),
+        user_id = update.effective_user.id
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=get_welcome_message(user_id),
             reply_markup=get_welcome_keyboard()
         )
         return
@@ -1043,13 +1153,20 @@ async def view_last_report(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         )
         context.user_data['last_report_message_id'] = report_msg.message_id
     else:
-        await query.message.reply_text("Последний отчет не найден.")
-    
-    # Возвращаем пользователя в главное меню после просмотра отчета
-    await query.message.reply_text(
-        get_welcome_message(update.effective_user.id),
-        reply_markup=get_welcome_keyboard()
-    )
+        # Редактируем текущее сообщение вместо отправки нового
+        await query.edit_message_text(
+            text="⚠️ Последний отчет не найден.",
+            reply_markup=None
+        )
+        
+        # Ждем 3 секунды
+        await asyncio.sleep(1.2)
+        
+        # Возвращаем исходное меню
+        await query.edit_message_text(
+            text=get_welcome_message(update.effective_user.id),
+            reply_markup=get_welcome_keyboard()
+        )
     
     return VIEW_REPORT
 
@@ -1132,7 +1249,7 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return ConversationHandler.END
 
 # Вспомогательная функция для сохранения данных
-def _save_data(user_id: int, data: dict):
+def _save_data(user_id: int,  data: dict):
     from data_handler import _save
     from data_handler import ensure_user_folder
     file_path = os.path.join(ensure_user_folder(user_id), 'data.json')
@@ -1199,5 +1316,6 @@ conv_handler = ConversationHandler(
         CallbackQueryHandler(cancel_price_edit, pattern='^cancel_price_edit$'),
         CallbackQueryHandler(cancel_editing, pattern='^cancel_editing$'),
         CallbackQueryHandler(cancel_edit_date, pattern='^cancel_edit_date$')
-    ]
+    ],
 )
+

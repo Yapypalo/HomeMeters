@@ -17,10 +17,10 @@ def load_user_data(user_id: int) -> dict:
         # Инициализируем с нулевыми ценами
         data = {
             PRICES_KEY: {
-                'Cold': 0,
-                'Hot': 0,
-                'Light': 0,
-                'Drainage': 0
+                'cold': 0,
+                'hot': 0,
+                'light': 0,
+                'drainage': 0
             }
         }
         _save(path, data)
@@ -57,3 +57,9 @@ def list_dates(user_id: int):
 def get_day_data(user_id: int, target_date: str) -> dict:
     data = load_user_data(user_id)
     return data.get(target_date, {})
+
+def ensure_user_folder(user_id: int) -> str:
+    """Создает и возвращает путь к папке пользователя"""
+    user_folder = os.path.join('users_data', str(user_id))
+    os.makedirs(user_folder, exist_ok=True)
+    return user_folder
