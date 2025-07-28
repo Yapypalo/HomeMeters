@@ -2,66 +2,384 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Таблица услуг</title>
-  <link rel="stylesheet" href="static/style.css">
+  <title>Utility Table</title>
+  <!-- Tailwind через CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+
+    :root {
+      --font-size: 20px;
+      --background: #ffffff;
+      --foreground: oklch(0.145 0 0);
+      --card: #ffffff;
+      --card-foreground: oklch(0.145 0 0);
+      --popover: oklch(1 0 0);
+      --popover-foreground: oklch(0.145 0 0);
+      --primary: #030213;
+      --primary-foreground: oklch(1 0 0);
+      --secondary: oklch(0.95 0.0058 264.53);
+      --secondary-foreground: #030213;
+      --muted: #ececf0;
+      --muted-foreground: #717182;
+      --accent: #e9ebef;
+      --accent-foreground: #030213;
+      --destructive: #d4183d;
+      --destructive-foreground: #ffffff;
+      --border: rgba(0, 0, 0, 0.1);
+      --input: transparent;
+      --input-background: #f3f3f5;
+      --switch-background: #cbced4;
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --ring: oklch(0.708 0 0);
+      --chart-1: oklch(0.646 0.222 41.116);
+      --chart-2: oklch(0.6 0.118 184.704);
+      --chart-3: oklch(0.398 0.07 227.392);
+      --chart-4: oklch(0.828 0.189 84.429);
+      --chart-5: oklch(0.769 0.188 70.08);
+      --radius: 0.625rem;
+      --sidebar: oklch(0.985 0 0);
+      --sidebar-foreground: oklch(0.145 0 0);
+      --sidebar-primary: #030213;
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.97 0 0);
+      --sidebar-accent-foreground: oklch(0.205 0 0);
+      --sidebar-border: oklch(0.922 0 0);
+      --sidebar-ring: oklch(0.708 0 0);
+    }
+
+    .dark {
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.145 0 0);
+      --card-foreground: oklch(0.985 0 0);
+      --popover: oklch(0.145 0 0);
+      --popover-foreground: oklch(0.985 0 0);
+      --primary: oklch(0.985 0 0);
+      --primary-foreground: oklch(0.205 0 0);
+      --secondary: oklch(0.269 0 0);
+      --secondary-foreground: oklch(0.985 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --accent: oklch(0.269 0 0);
+      --accent-foreground: oklch(0.985 0 0);
+      --destructive: oklch(0.396 0.141 25.723);
+      --destructive-foreground: oklch(0.637 0.237 25.331);
+      --border: oklch(0.269 0 0);
+      --input: oklch(0.269 0 0);
+      --ring: oklch(0.439 0 0);
+      --font-weight-medium: 500;
+      --font-weight-normal: 400;
+      --chart-1: oklch(0.488 0.243 264.376);
+      --chart-2: oklch(0.696 0.17 162.48);
+      --chart-3: oklch(0.769 0.188 70.08);
+      --chart-4: oklch(0.627 0.265 303.9);
+      --chart-5: oklch(0.645 0.246 16.439);
+      --sidebar: oklch(0.205 0 0);
+      --sidebar-foreground: oklch(0.985 0 0);
+      --sidebar-primary: oklch(0.488 0.243 264.376);
+      --sidebar-primary-foreground: oklch(0.985 0 0);
+      --sidebar-accent: oklch(0.269 0 0);
+      --sidebar-accent-foreground: oklch(0.985 0 0);
+      --sidebar-border: oklch(0.269 0 0);
+      --sidebar-ring: oklch(0.439 0 0);
+    }
+    /**
+    * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+    */
+    @layer base {
+      :where(
+        :not(:has([class*=" text-"]), :not(:has([class^="text-"])))
+      ) {
+        h1 {
+          font-size: var(--text-2xl);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        h2 {
+          font-size: var(--text-xl);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        h3 {
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        h4 {
+          font-size: var(--text-base);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        p {
+          font-size: var(--text-base);
+          font-weight: var(--font-weight-normal);
+          line-height: 1.5;
+        }
+
+        label {
+          font-size: var(--text-base);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        button {
+          font-size: var(--text-base);
+          font-weight: var(--font-weight-medium);
+          line-height: 1.5;
+        }
+
+        input {
+          font-size: var(--text-base);
+          font-weight: var(--font-weight-normal);
+          line-height: 1.5;
+        }
+      }
+    }
+
+    html {
+      font-size: var(--font-size);
+    }
+
+    /* Custom styles for utility table */
+    .liquid-glass-year {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0.9) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      display: inline-block;
+    }
+
+    .utility-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 20px;
+      box-shadow:
+        0 0 50px rgba(100, 150, 255, 0.3),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+    }
+
+    .utility-table td,
+    .utility-table th {
+      position: relative;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    /* Special alignment for first column */
+    .utility-table td:first-child {
+      text-align: left;
+    }
+
+    /* Remove all vertical borders */
+    .utility-table td,
+    .utility-table th {
+      border-left: none !important;
+    }
+
+    /* One horizontal divider per row with gradient fade */
+    .utility-table tbody tr:not(.total-row) {
+      border-top: 1px solid transparent;
+      background-image: linear-gradient(
+        to right,
+        transparent 5%,
+        rgba(107, 114, 128, 0.6) 50%,
+        transparent 95%
+      );
+      background-size: 100% 1px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+    }
+
+    /* Hide empty cells in total row */
+    .total-row td:not(:nth-last-child(2)):not(:last-child) {
+      background: transparent;
+      border: none !important;
+    }
+
+    /* Subtle glow effects */
+    .glow-left {
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 180px;
+      height: 30px;
+      border-radius: 50%;
+      filter: blur(15px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .glow-right {
+      position: absolute;
+      right: -5px;
+      top: 60%;
+      transform: translateY(-50%);
+      width: 110px;
+      height: 40px;
+      border-radius: 50%;
+      filter: blur(15px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .glow-yellow {
+      background: rgba(255, 255, 0, 0.4);
+      box-shadow:
+        0 0 20px rgba(255, 255, 0, 0.6),
+        0 0 40px rgba(255, 255, 0, 0.3);
+    }
+
+    .glow-blue {
+      background: rgba(0, 150, 255, 0.4);
+      box-shadow:
+        0 0 20px rgba(0, 150, 255, 0.6),
+        0 0 40px rgba(0, 150, 255, 0.3);
+    }
+
+    .glow-red {
+      background: rgba(255, 50, 50, 0.4);
+      box-shadow:
+        0 0 20px rgba(255, 50, 50, 0.6),
+        0 0 40px rgba(255, 50, 50, 0.3);
+    }
+
+    .glow-purple {
+      background: rgba(150, 50, 255, 0.4);
+      box-shadow:
+        0 0 20px rgba(150, 50, 255, 0.6),
+        0 0 40px rgba(150, 50, 255, 0.3);
+    }
+
+    .glow-green {
+      background: rgba(50, 255, 100, 0.5);
+      box-shadow:
+        0 0 20px rgba(50, 255, 100, 0.7),
+        0 0 40px rgba(50, 255, 100, 0.4);
+    }
+
+    .glow-bg {
+      /* полупрозрачный синий фон */
+      background: rgba(59, 130, 246, 0.9);
+      /* положение и размер */
+      width: 700px;
+      height: 300px;
+      /* скругление и размытие */
+      border-radius: 5rem;
+      filter: blur(5rem);
+    }
+  </style>
 </head>
-<body>
-  <div class="wrapper">
+<body class="flex items-center justify-center min-h-screen bg-gray-900">
+  <div class="w-[800px] h-[500px] bg-gray-900 flex items-center justify-center relative">
 
-    <table>
-      <!-- Заголовки -->
-      <tr>
-        <th>
-            <svg width="0" height="0" style="position:absolute">
-              <defs>
-                <mask id="text-mask" x="0" y="0" width="300" height="90" maskUnits="userSpaceOnUse">
-                  <!-- чёрный фон = всё скрыто -->
-                  <rect x="0" y="0" width="300" height="90" fill="black" />
-                  <!-- белый текст = то, что останется видимым -->
-                  <text x="10" y="70"
-                     font-size="80" font-weight="bold"
-                     fill="white">
-                    {{ year }}
-                  </text>
-                </mask>
-              </defs>
-            </svg>
+    <!-- Glow effect for the table -->
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="glow-bg"></div>
+    </div>
+    
+    <div class="relative z-10">
+      <table class="utility-table bg-gray-800/90 backdrop-blur-sm border-2 border-gray-600 shadow-2xl">
+        <thead>
+          <tr class="bg-gray-700/50">
+            <th class="px-6 py-4 relative rounded-tl-[18px]">
+              <div class="liquid-glass-year">2024</div>
+            </th>
+            <th class="px-4 py-4 text-gray-300">
+              <div>Предыдущие показания</div>
+              <div class="text-sm text-gray-400 mt-1">25.12</div>
+            </th>
+            <th class="px-4 py-4 text-gray-300">
+              <div>Текущие показания</div>
+              <div class="text-sm text-gray-400 mt-1">25.01</div>
+            </th>
+            <th class="px-4 py-4 text-gray-300">Разность</th>
+            <th class="px-4 py-4 text-gray-300">Цена</th>
+            <th class="px-4 py-4 text-gray-300 rounded-tr-[18px]">Сумма</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Electricity row -->
+          <tr class="relative electricity-row">
+            <td class="px-6 py-4 text-white relative">
+              Свет
+              <div class="glow-left glow-yellow"></div>
+            </td>
+            <td class="px-4 py-4 text-gray-300">1250</td>
+            <td class="px-4 py-4 text-gray-300">1320</td>
+            <td class="px-4 py-4 text-gray-300">70</td>
+            <td class="px-4 py-4 text-gray-300">5.50</td>
+            <td class="px-4 py-4 text-gray-300">385.00</td>
+          </tr>
+          
+          <!-- Cold water row -->
+          <tr class="relative cold-water-row">
+            <td class="px-6 py-4 text-white relative">
+              Холодная вода
+              <div class="glow-left glow-blue"></div>
+            </td>
+            <td class="px-4 py-4 text-gray-300">45</td>
+            <td class="px-4 py-4 text-gray-300">48</td>
+            <td class="px-4 py-4 text-gray-300">3</td>
+            <td class="px-4 py-4 text-gray-300">42.50</td>
+            <td class="px-4 py-4 text-gray-300">127.50</td>
+          </tr>
+          
+          <!-- Hot water row -->
+          <tr class="relative hot-water-row">
+            <td class="px-6 py-4 text-white relative">
+              Горячая вода
+              <div class="glow-left glow-red"></div>
+            </td>
+            <td class="px-4 py-4 text-gray-300">12</td>
+            <td class="px-4 py-4 text-gray-300">14</td>
+            <td class="px-4 py-4 text-gray-300">2</td>
+            <td class="px-4 py-4 text-gray-300">185.75</td>
+            <td class="px-4 py-4 text-gray-300">371.50</td>
+          </tr>
+          
+          <!-- Drainage row -->
+          <tr class="relative drainage-row">
+            <td class="px-6 py-4 text-white relative">
+              Водоотведение
+              <div class="glow-left glow-purple"></div>
+            </td>
+            <td class="px-4 py-4 text-gray-300">57</td>
+            <td class="px-4 py-4 text-gray-300">62</td>
+            <td class="px-4 py-4 text-gray-300">5</td>
+            <td class="px-4 py-4 text-gray-300">28.40</td>
+            <td class="px-4 py-4 text-gray-300 rounded-br-[18px]">142.00</td>
+          </tr>
+          
+          <!-- Total row -->
+          <tr class="bg-gray-700/30 relative total-row">
+            <td class="px-6 py-4 opacity-0"></td>
+            <td class="px-4 py-4 text-gray-300 opacity-0"></td>
+            <td class="px-4 py-4 text-gray-300 opacity-0"></td>
+            <td class="px-4 py-4 text-gray-300 opacity-0"></td>
+            <td class="px-4 py-4 text-white bg-gray-700/50 rounded-bl-[18px]">Итого</td>
+            <td class="px-4 py-4 text-white relative bg-gray-700/50 rounded-br-[18px]">
+              1026.00
+              <div class="glow-right glow-green"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-          <div class="masked-box"></div>
-
-        </th>
-        <th>Предыдущие показания
-            <span class="sub-number">{{ month_old }}</span>
-        </th>
-        <th>Текущие показания
-            <span class="sub-number">{{ month_now }}</span>
-        </th>
-        <th>Расход </th>
-        <th>Цена</th>
-        <th>Сумма</th>
-      </tr>
-
-      {% for service in services %}
-      <tr class="glow {{ service.class }}">
-        <td class="glow-arrow">{{ service.name }}</td>
-        <td>{{ service.start }}</td>
-        <td>{{ service.end }}</td>
-        <td>{{ service.diff }}</td>
-        <td>{{ service.price }}</td>
-        <td>{{ service.total }}</td>
-      </tr>
-      {% endfor %}
-
-      <!-- Итоговая сумма -->
-      <tr class="total-row">
-        <td class="empty">—</td>
-        <td class="empty">—</td>
-        <td class="empty">—</td>
-        <td class="empty">—</td>
-        <td>Итого:</td>
-        <td class="total-sum">{{ total }}</td>
-      </tr>
-    </table>
   </div>
 </body>
 </html>
