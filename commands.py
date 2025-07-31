@@ -4,6 +4,7 @@ from telegram.ext import (
     CallbackQueryHandler, MessageHandler, filters
 )
 from data_handler import write_reading, load_user_data, get_day_data, update_price, list_dates, ensure_user_folder
+from report_generate import generate_and_save_graphical_report
 from datetime import date, datetime, timedelta
 import asyncio
 import re
@@ -202,7 +203,9 @@ def get_welcome_keyboard():
         [InlineKeyboardButton("📝 Добавить данные", callback_data="add_data")],
         [InlineKeyboardButton("💰 Изменить стоимость", callback_data="price_menu")],
         [InlineKeyboardButton("📅 Посмотреть показания", callback_data="view_dates")],
-        [InlineKeyboardButton("📊 Последний отчет", callback_data="view_last_report")]
+        [InlineKeyboardButton("📊 Последний отчет", callback_data="view_last_report")],
+        [InlineKeyboardButton("🖼️ Графический отчет", callback_data="view_graphical_report")],
+        [InlineKeyboardButton("🧪 Тестовый отчет (Июль 2025)", callback_data="test_graphical_report")]
     ]
     return InlineKeyboardMarkup(keyboard)
 
@@ -402,6 +405,53 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         reply_markup=get_welcome_keyboard()
     )
     return ConversationHandler.END
+
+async def view_test_graphical_report(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Показать тестовый графический отчет за июль 2025"""
+    query = update.callback_query
+    await query.answer()
+    
+    # Удаляем предыдущий отчет
+    await delete_previous_report(update, context)
+    
+    user_id = update.effective_user.id
+    
+    # Фиксированные даты для теста
+    current_date = "2025-07-31"
+    last_month_date = "2025-07-01"
+    
+    data = load_user_data(user_id)
+    
+    # Проверяем наличие данных за указанные даты
+    if last_month_date in data and current_date in data:
+        # Проверяем наличие всех необходимых показаний
+        required_keys = ['light', 'cold', 'hot']
+        prev_data = data[last_month_date]
+        curr_data = data[current_date]
+        
+        if all(key in prev_data for key in required_keys) and all(key in curr_data for key in required_keys):
+            # Генерируем и сохраняем графический отчет
+            image_path = await generate_and_save_graphical_report(user_id, current_date, last_month_date)
+            
+            if image_path:
+                # Отправляем изображение
+                with open(image_path, 'rb') as img:
+                    await context.bot.send_photo(
+                        chat_id=update.effective_chat.id,
+                        photo=img,
+                        caption="📊 Тестовый графический отчет за июль 2025"
+                    )
+                return VIEW_REPORT
+    
+    # Если данных недостаточно, отправляем сообщение
+    await query.message.reply_text(
+        "⚠️ Недостаточно данных для генерации тестового отчета. "
+        "Пожалуйста, добавьте показания за 01.07.2025 и 31.07.2025.",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("◀️ Назад", callback_data="back_to_main")]])
+    )
+    
+    return VIEW_REPORT
+
 
 async def delete_previous_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Удаляет предыдущее сообщение с отчетом, если оно существует"""
@@ -1220,19 +1270,17 @@ async def handle_reading(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             curr_data = data[current_date]
             
             if all(key in prev_data for key in required_keys) and all(key in curr_data for key in required_keys):
-                # Генерируем отчет
-                report = generate_monthly_report(user_id, current_date, last_month_date)
+                # Генерируем и сохраняем графический отчет
+                image_path = await generate_and_save_graphical_report(user_id, current_date, last_month_date)
                 
-                # Сохраняем отчет
-                context.user_data['last_report'] = report
-                
-                # Отправляем отчет как отдельное сообщение
-                report_msg = await context.bot.send_message(
-                    chat_id=chat_id,
-                    text=report,
-                    parse_mode='Markdown'
-                )
-                context.user_data['last_report_message_id'] = report_msg.message_id
+                if image_path:
+                    # Отправляем изображение
+                    with open(image_path, 'rb') as img:
+                        await context.bot.send_photo(
+                            chat_id=update.effective_chat.id,
+                            photo=img,
+                            caption="📊 Графический отчет за период"
+                        )
         
         # Возвращаем стартовое сообщение с уведомлением
         success_msg = (
@@ -1269,7 +1317,8 @@ conv_handler = ConversationHandler(
         CallbackQueryHandler(handle_add_data, pattern='^add_data$'),
         CallbackQueryHandler(show_price_menu, pattern='^price_menu$'),
         CallbackQueryHandler(view_dates, pattern='^view_dates$'),
-        CallbackQueryHandler(view_last_report, pattern='^view_last_report$')
+        CallbackQueryHandler(view_last_report, pattern='^view_last_report$'),
+        CallbackQueryHandler(view_test_graphical_report, pattern='^test_graphical_report$')
     ],
     states={
         READING_STATE: [
@@ -1307,7 +1356,8 @@ conv_handler = ConversationHandler(
             CallbackQueryHandler(back_to_main, pattern='^back_to_main$'),
             CallbackQueryHandler(handle_add_data, pattern='^add_data$'),
             CallbackQueryHandler(show_price_menu, pattern='^price_menu$'),
-            CallbackQueryHandler(view_dates, pattern='^view_dates$')
+            CallbackQueryHandler(view_dates, pattern='^view_dates$'),
+            CallbackQueryHandler(view_test_graphical_report, pattern='^test_graphical_report$')  # Новая строка
         ]
     },
     fallbacks=[

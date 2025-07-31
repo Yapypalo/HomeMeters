@@ -215,7 +215,7 @@
       left: -10px;
       top: 50%;
       transform: translateY(-50%);
-      width: 180px;
+      width: 220px;
       height: 30px;
       border-radius: 50%;
       filter: blur(15px);
@@ -228,7 +228,7 @@
       right: -5px;
       top: 60%;
       transform: translateY(-50%);
-      width: 110px;
+      width: 120px;
       height: 40px;
       border-radius: 50%;
       filter: blur(15px);
@@ -290,21 +290,20 @@
     <div class="absolute inset-0 flex items-center justify-center">
       <div class="glow-bg"></div>
     </div>
-    
     <div class="relative z-10">
       <table class="utility-table bg-gray-800/90 backdrop-blur-sm border-2 border-gray-600 shadow-2xl">
         <thead>
           <tr class="bg-gray-700/50">
             <th class="px-6 py-4 relative rounded-tl-[18px]">
-              <div class="liquid-glass-year">2024</div>
+              <div class="liquid-glass-year">{{year}}</div>
             </th>
             <th class="px-4 py-4 text-gray-300">
               <div>Предыдущие показания</div>
-              <div class="text-sm text-gray-400 mt-1">25.12</div>
+              <div class="text-sm text-gray-400 mt-1">{{prev_date}}</div>
             </th>
             <th class="px-4 py-4 text-gray-300">
               <div>Текущие показания</div>
-              <div class="text-sm text-gray-400 mt-1">25.01</div>
+              <div class="text-sm text-gray-400 mt-1">{{curr_date}}</div>
             </th>
             <th class="px-4 py-4 text-gray-300">Разность</th>
             <th class="px-4 py-4 text-gray-300">Цена</th>
@@ -318,52 +317,48 @@
               Свет
               <div class="glow-left glow-yellow"></div>
             </td>
-            <td class="px-4 py-4 text-gray-300">1250</td>
-            <td class="px-4 py-4 text-gray-300">1320</td>
-            <td class="px-4 py-4 text-gray-300">70</td>
-            <td class="px-4 py-4 text-gray-300">5.50</td>
-            <td class="px-4 py-4 text-gray-300">385.00</td>
+            <td class="px-4 py-4 text-gray-300">{{light_prev}}</td>
+            <td class="px-4 py-4 text-gray-300">{{light_curr}}</td>
+            <td class="px-4 py-4 text-gray-300">{{light_diff}}</td>
+            <td class="px-4 py-4 text-gray-300">{{light_price}}</td>
+            <td class="px-4 py-4 text-gray-300">{{light_cost}}</td>
           </tr>
-          
           <!-- Cold water row -->
           <tr class="relative cold-water-row">
             <td class="px-6 py-4 text-white relative">
               Холодная вода
               <div class="glow-left glow-blue"></div>
             </td>
-            <td class="px-4 py-4 text-gray-300">45</td>
-            <td class="px-4 py-4 text-gray-300">48</td>
-            <td class="px-4 py-4 text-gray-300">3</td>
-            <td class="px-4 py-4 text-gray-300">42.50</td>
-            <td class="px-4 py-4 text-gray-300">127.50</td>
+            <td class="px-4 py-4 text-gray-300">{{cold_prev}}</td>
+            <td class="px-4 py-4 text-gray-300">{{cold_curr}}</td>
+            <td class="px-4 py-4 text-gray-300">{{cold_diff}}</td>
+            <td class="px-4 py-4 text-gray-300">{{cold_price}}</td>
+            <td class="px-4 py-4 text-gray-300">{{cold_cost}}</td>
           </tr>
-          
           <!-- Hot water row -->
           <tr class="relative hot-water-row">
             <td class="px-6 py-4 text-white relative">
               Горячая вода
               <div class="glow-left glow-red"></div>
             </td>
-            <td class="px-4 py-4 text-gray-300">12</td>
-            <td class="px-4 py-4 text-gray-300">14</td>
-            <td class="px-4 py-4 text-gray-300">2</td>
-            <td class="px-4 py-4 text-gray-300">185.75</td>
-            <td class="px-4 py-4 text-gray-300">371.50</td>
+            <td class="px-4 py-4 text-gray-300">{{hot_prev}}</td>
+            <td class="px-4 py-4 text-gray-300">{{hot_curr}}</td>
+            <td class="px-4 py-4 text-gray-300">{{hot_diff}}</td>
+            <td class="px-4 py-4 text-gray-300">{{hot_price}}</td>
+            <td class="px-4 py-4 text-gray-300">{{hot_cost}}</td>
           </tr>
-          
           <!-- Drainage row -->
           <tr class="relative drainage-row">
             <td class="px-6 py-4 text-white relative">
               Водоотведение
               <div class="glow-left glow-purple"></div>
             </td>
-            <td class="px-4 py-4 text-gray-300">57</td>
-            <td class="px-4 py-4 text-gray-300">62</td>
-            <td class="px-4 py-4 text-gray-300">5</td>
-            <td class="px-4 py-4 text-gray-300">28.40</td>
-            <td class="px-4 py-4 text-gray-300 rounded-br-[18px]">142.00</td>
+            <td class="px-4 py-4 text-gray-300">{{drainage_prev}}</td>
+            <td class="px-4 py-4 text-gray-300">{{drainage_curr}}</td>
+            <td class="px-4 py-4 text-gray-300">{{drainage_diff}}</td>
+            <td class="px-4 py-4 text-gray-300">{{drainage_price}}</td>
+            <td class="px-4 py-4 text-gray-300 rounded-br-[18px]">{{drainage_cost}}</td>
           </tr>
-          
           <!-- Total row -->
           <tr class="bg-gray-700/30 relative total-row">
             <td class="px-6 py-4 opacity-0"></td>
@@ -372,14 +367,13 @@
             <td class="px-4 py-4 text-gray-300 opacity-0"></td>
             <td class="px-4 py-4 text-white bg-gray-700/50 rounded-bl-[18px]">Итого</td>
             <td class="px-4 py-4 text-white relative bg-gray-700/50 rounded-br-[18px]">
-              1026.00
+              {{total_cost}}
               <div class="glow-right glow-green"></div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
   </div>
 </body>
 </html>

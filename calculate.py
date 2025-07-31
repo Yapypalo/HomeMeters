@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 from data_handler import load_user_data
 from constants import PRICES_KEY
 
