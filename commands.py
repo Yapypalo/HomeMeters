@@ -209,7 +209,7 @@ def get_welcome_keyboard():
 def get_price_menu_keyboard(user_id: int):
     """Генерация клавиатуры с текущими ценами"""
     data = load_user_data(user_id)
-    # Исправлено: проверяем оба возможных ключа для совместимости
+    # Исправлено: проверяем оба возможных ключа для совместимости.
     prices = data.get('prices', data.get('Prices', {}))
     
     keyboard = []
